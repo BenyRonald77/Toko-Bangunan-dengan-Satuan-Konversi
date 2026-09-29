@@ -14,7 +14,7 @@
                             type="button"
                             wire:click="selectBucket('{{ $key }}')"
                             class="text-left bg-white rounded-lg border p-4 transition
-                                {{ $bucketFilter === $key ? 'border-amber-500 ring-1 ring-amber-500' : 'border-slate-200 hover:border-slate-300' }}"
+                                {{ $bucketFilter === $key ? 'border-amber-600 ring-1 ring-amber-600' : 'border-slate-200 hover:border-slate-300' }}"
                         >
                             <div class="text-xs text-slate-500">{{ $bucket['label'] }}</div>
                             <div class="text-lg font-semibold text-slate-900 mt-1">{{ $bucket['count'] }} piutang</div>

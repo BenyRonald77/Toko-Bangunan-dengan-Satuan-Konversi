@@ -20,7 +20,7 @@
                 </div>
                 <div>
                     <x-input-label for="address" value="Alamat" />
-                    <textarea id="address" wire:model="address" rows="2" class="mt-1 block w-full border-slate-300 focus:border-amber-500 focus:ring-amber-500 rounded-md shadow-sm"></textarea>
+                    <textarea id="address" wire:model="address" rows="2" class="mt-1 block w-full border-slate-300 focus:border-amber-600 focus:ring-amber-600 rounded-md shadow-sm"></textarea>
                     <x-input-error :messages="$errors->get('address')" class="mt-1" />
                 </div>
                 <div>

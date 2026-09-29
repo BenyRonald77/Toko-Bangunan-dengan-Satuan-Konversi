@@ -17,7 +17,7 @@
                     type="search"
                     wire:model.live.debounce.300ms="search"
                     placeholder="Cari nama atau SKU produk..."
-                    class="w-full sm:w-80 border-slate-300 focus:border-amber-500 focus:ring-amber-500 rounded-md shadow-sm text-sm"
+                    class="w-full sm:w-80 border-slate-300 focus:border-amber-600 focus:ring-amber-600 rounded-md shadow-sm text-sm"
                 >
             </div>
 
