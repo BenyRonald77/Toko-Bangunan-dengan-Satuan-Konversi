@@ -33,6 +33,7 @@
                     @endif
                 </div>
 
+                <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="text-xs text-slate-500 uppercase border-b border-slate-200">
                         <tr>
@@ -61,6 +62,7 @@
                         </tr>
                     </tfoot>
                 </table>
+                </div>
             </div>
 
             @if ($sale->receivable)

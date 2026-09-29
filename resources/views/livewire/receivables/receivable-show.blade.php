@@ -82,6 +82,7 @@
                 @if ($receivable->payments->isEmpty())
                     <p class="text-sm text-slate-500">Belum ada pembayaran untuk piutang ini.</p>
                 @else
+                    <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead class="text-xs text-slate-500 uppercase border-b border-slate-200">
                             <tr>
@@ -98,6 +99,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                 @endif
             </div>
 

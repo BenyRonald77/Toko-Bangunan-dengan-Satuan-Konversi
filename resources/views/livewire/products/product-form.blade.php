@@ -146,6 +146,7 @@
                                     @if ($tiers->isEmpty())
                                         <p class="text-sm text-red-600">Belum ada tier harga untuk satuan ini &mdash; penjualan dengan satuan ini akan ditolak.</p>
                                     @else
+                                        <div class="overflow-x-auto">
                                         <table class="w-full text-sm">
                                             <thead class="text-xs text-slate-500 uppercase">
                                                 <tr>
@@ -168,6 +169,7 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        </div>
                                     @endif
                                 </div>
                             @endforeach

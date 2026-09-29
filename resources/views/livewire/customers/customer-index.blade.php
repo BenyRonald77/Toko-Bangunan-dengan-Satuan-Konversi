@@ -32,6 +32,7 @@
                         @endif
                     </div>
                 @else
+                    <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
                         <thead class="bg-slate-50 text-slate-500 uppercase text-xs">
                             <tr>
@@ -64,6 +65,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                     <div class="p-4 border-t border-slate-100">
                         {{ $customers->links() }}
                     </div>

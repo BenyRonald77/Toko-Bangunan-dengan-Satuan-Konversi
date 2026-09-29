@@ -41,6 +41,7 @@
                     <div class="px-4 py-3 border-b border-slate-100 font-semibold text-slate-800 text-sm">
                         Produk yang perlu direstok
                     </div>
+                    <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
                         <thead class="bg-slate-50 text-slate-500 uppercase text-xs">
                             <tr>
@@ -59,6 +60,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    </div>
                 </div>
             @endif
         </div>
