@@ -75,7 +75,7 @@ class Receivable extends Model
             return 0;
         }
 
-        return (int) Carbon::today()->diffInDays($this->due_date);
+        return (int) abs(Carbon::today()->diffInDays($this->due_date));
     }
 
     /**
