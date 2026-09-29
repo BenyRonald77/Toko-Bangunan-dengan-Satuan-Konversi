@@ -32,12 +32,15 @@ mistakes", not for making a visitor feel something.
 - **Neutral base**: Tailwind `slate` scale (backgrounds, borders, body text) — Breeze's own
   default neutral, kept because there is no reason to fight it: the interface is 95% tables,
   labels and forms, and a neutral base keeps that content legible over anything decorative.
-- **One accent: amber (`amber-600` light / `amber-500` dark)**. *Reason:* amber/orange is the
-  toko bangunan's own visual vocabulary — safety vests, tool handles, warning tape, hazard
-  signage on a real construction site — so it reads as "hardware store", not as a generic web
-  accent, and it is different enough from the "blue-purple SaaS default" this filter forbids
-  (R-01, R-29). It is used only where one thing must stand out: primary buttons, the active nav
-  item, low-stock and jatuh-tempo badges, and focus rings. Everything else stays neutral.
+- **One accent: amber** (`amber-700` for filled buttons and link text, `amber-600` for
+  borders/focus rings, `amber-100`/`amber-800` for badges — the shade shifts only to keep each
+  use at or above WCAG AA contrast against its own background, never to introduce a second
+  accent color). *Reason:* amber/orange is the toko bangunan's own visual vocabulary — safety
+  vests, tool handles, warning tape, hazard signage on a real construction site — so it reads
+  as "hardware store", not as a generic web accent, and it is different enough from the
+  "blue-purple SaaS default" this filter forbids (R-01, R-29). It is used only where one thing
+  must stand out: primary buttons, the active nav item, low-stock and jatuh-tempo badges, and
+  focus rings. Everything else stays neutral.
 - Semantic colors (not part of the core 2-3 + 1 accent count, per R-29): `emerald` for
   lunas/paid states, `red` for jatuh tempo / stock errors — these are status colors, not brand
   decoration, and they carry real meaning (R-31).
