@@ -1,58 +1,116 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Toko Bangunan dengan Satuan Konversi
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi kasir/back-office internal untuk toko bangunan: penjualan multi-satuan dengan stok
+yang selalu konsisten, harga grosir berjenjang, dan piutang pelanggan proyek beserta laporan
+umur jatuh temponya (aging). Lihat `PRD.md` untuk spesifikasi lengkap dan `DESIGN.md` untuk
+arah desain UI.
 
-## About Laravel
+## Setup
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Kebutuhan: PHP 8.4+, Composer 2.x, Node.js/npm.
 
 ```bash
-composer require laravel/boost --dev
+composer install
+npm install
 
-php artisan boost:install
+cp .env.example .env      # sudah diset DB_CONNECTION=sqlite untuk sandbox ini
+php artisan key:generate
+
+touch database/database.sqlite
+php artisan migrate --seed
+
+npm run build              # atau: npm run dev, saat mengembangkan
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Buka `http://127.0.0.1:8000`. Untuk deployment sungguhan, ganti blok database di `.env` ke
+blok MySQL yang sudah tersedia (dikomentari) di `.env.example`.
 
-## Contributing
+Menjalankan test:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan test
+```
 
-## Code of Conduct
+## Kredensial Demo
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Dibuat oleh `UserSeeder` (`php artisan migrate --seed`):
 
-## Security Vulnerabilities
+| Peran  | Email                      | Password   |
+|--------|-----------------------------|------------|
+| Admin  | admin@tokobangunan.test     | `password` |
+| Kasir  | kasir@tokobangunan.test     | `password` |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Data lain yang ikut di-seed: 3 pelanggan (Umum/Walk-in, satu pelanggan umum, satu pelanggan
+proyek dengan limit kredit), dan 7 produk bahan bangunan (semen, besi beton, cat tembok,
+keramik, pasir, paku, triplek) lengkap dengan satuan jual dan tingkatan harga grosirnya.
 
-## License
+## Fitur
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Manajemen produk & satuan konversi** (admin): tiap produk punya satuan dasar (tempat stok
+  benar-benar disimpan) dan boleh punya beberapa satuan jual lain dengan faktor konversinya
+  masing-masing ke satuan dasar (mis. 1 sak semen = 40 kg).
+- **Harga grosir berjenjang** (admin): beberapa tingkatan harga per kombinasi produk+satuan,
+  dipilih otomatis berdasarkan qty yang dibeli saat transaksi.
+- **Penjualan multi-satuan** (admin & kasir): kasir memilih produk, satuan, dan qty; harga
+  dan pratinjau stok (termasuk konversinya) tampil langsung sebelum disimpan. Stok divalidasi
+  dan dikurangi dalam satuan dasar, dan satu transaksi yang mengandung item dengan stok tidak
+  cukup ditolak seluruhnya (tidak ada penyimpanan sebagian).
+- **Piutang pelanggan (tempo)** (admin & kasir): penjualan dengan pembayaran tempo otomatis
+  membuat piutang dengan jatuh tempo; pembayaran parsial maupun lunas bisa dicatat dan sisa
+  tagihan/status ter-update otomatis.
+- **Laporan aging piutang**: piutang yang belum lunas dikelompokkan ke belum jatuh tempo,
+  terlambat 1-30 hari, 31-60 hari, dan >60 hari, masing-masing dengan jumlah dan total nyata
+  (bukan angka rekaan), dan bisa dipakai sebagai filter daftar piutang.
+- **Dashboard** ringkas: transaksi hari ini, jumlah piutang jatuh tempo, dan (khusus admin)
+  daftar produk yang stoknya sudah di bawah ambang minimum.
+- Login & manajemen profil bawaan Laravel Breeze (stack Livewire).
+
+Batasan peran: kasir bisa membuat penjualan dan mencatat pembayaran piutang, tapi tidak bisa
+mengubah data master (produk, satuan, tingkatan harga, pelanggan) — itu wewenang admin. Lihat
+PRD bagian 7 untuk alasannya.
+
+## Bagaimana Model Konversi Satuan & Stok Bekerja
+
+Ini bagian paling penting untuk dipercaya angkanya, jadi dijelaskan di sini, bukan hanya di kode:
+
+1. **Stok sebuah produk hanya disimpan di satu tempat**: kolom `products.base_stock`, selalu
+   dalam satuan dasar produk itu (`products.base_unit_name`, misal "kg"). Tidak ada stok
+   terpisah per satuan jual — itu sumber ketidaksinkronan yang ingin dihindari aplikasi ini.
+2. **Setiap satuan jual punya faktor konversi ke satuan dasar**, disimpan di
+   `product_units.conversion_to_base`. Satuan dasar sendiri juga punya baris di sini dengan
+   `conversion_to_base = 1`, supaya semua satuan (termasuk satuan dasar) diperlakukan sama saat
+   mencari harga.
+3. **Saat sebuah item penjualan disimpan**, sistem menghitung
+   `qty_yang_dibeli * conversion_to_base` satuan itu untuk mendapatkan kebutuhan dalam satuan
+   dasar, lalu mengurangi `base_stock` sejumlah itu. Membeli 2 sak + 10 kg semen dalam satu
+   transaksi mengurangi `base_stock` sejumlah `2*40 + 10*1 = 90 kg` — bukan "2" dan "10" yang
+   dikurangi dari dua tempat berbeda.
+4. **Validasi terjadi sebelum penyimpanan apa pun**: seluruh kebutuhan stok satu transaksi
+   (bisa lebih dari satu produk/item) dihitung dan dicek terhadap `base_stock` yang ada,
+   dan HANYA jika semuanya cukup, transaksi baru benar-benar disimpan dan stok dikurangi,
+   dalam satu database transaction. Kalau satu item saja kurang stoknya, seluruh transaksi
+   dibatalkan — tidak ada penjualan yang "separuh tersimpan".
+5. **Aturan ini hanya ada di satu tempat**: `App\Services\SaleService::createSale()`. Baik
+   form penjualan (Livewire) maupun seeder demo memanggil service yang sama, sehingga tidak ada
+   jalur lain yang bisa menyimpan `sale_item` tanpa melewati validasi dan pengurangan stok ini.
+6. **Harga yang dipakai juga dihitung di tempat yang sama** (`App\Services\PricingService`):
+   tingkatan harga (`price_tiers`) dipilih berdasarkan qty yang dibeli untuk kombinasi
+   produk+satuan itu — tier dengan `min_qty` terbesar yang tetap `<= qty` dipakai (batas
+   `min_qty` itu sendiri termasuk dalam tier itu, bukan tier di bawahnya). Harga yang berlaku
+   disimpan sebagai snapshot di `sale_items.unit_price`, jadi mengubah tier di kemudian hari
+   tidak mengubah riwayat transaksi yang sudah terjadi.
+
+Karena dua aturan di atas (konversi+stok, dan pemilihan harga) hanya hidup di satu service
+masing-masing, siapa pun yang menambah jalur baru untuk membuat penjualan (API, import, dll)
+di masa depan otomatis ikut aturan yang sama selama memanggil `SaleService`/`PricingService`,
+bukan menulis ulang logikanya.
+
+## Status Piutang "Jatuh Tempo"
+
+Kolom `receivables.status` di database hanya menyimpan `belum_lunas`/`lunas` (yang memang perlu
+ditulis saat ada pembayaran). Status "jatuh tempo" dihitung saat dibaca
+(`Receivable::displayStatus()`), dengan membandingkan `due_date` terhadap tanggal hari ini untuk
+piutang yang `belum_lunas` — bukan lewat command terjadwal yang menulis ulang status. Ini lebih
+sederhana dan tidak bisa "basi" karena tidak menunggu job jalan; laporan aging memakai turunan
+yang sama (`Receivable::agingBucket()`).
